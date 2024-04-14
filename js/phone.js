@@ -1,24 +1,26 @@
-const LoadPhone = async (searchText) => {
+const LoadPhone = async (searchText, isShowAll) => {
 const res = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchText}`)
 const data = await res.json();
 const phones = (data.data);
-displyPhones(phones)
+displyPhones(phones, isShowAll)
 }
-const displyPhones = phones =>{
+const displyPhones = (phones, isShowAll) =>{
     //console.log(phones);
     const phonecontainer = document.getElementById('phone-container');
     //clear phone content card before adding new cards
     phonecontainer.textContent='';
-    //display show all btn if there are more then 10 phones
+    //display show all btn if there are more then 12 phones
     const showAll = document.getElementById('show-all')
-    if(phones.length>12){
+    if(phones.length> 12 && !isShowAll){
          showAll.classList.remove('hidden');
     }
     else{
       showAll.classList.add('hidden')
     }
-    //display only 12 phones
-    phones = phones.slice(0,12);
+    //display only 12 phones if not showAll
+    if(!isShowAll){
+      phones = phones.slice(0,12);
+    }
     phones.forEach(phones =>{
         //console.log(phones)
         //create a div
@@ -42,12 +44,12 @@ const displyPhones = phones =>{
 
 }
 //handle search btn
-const handleSearch = () => {
+const handleSearch = (isShowAll) => {
   toggoleLodingSpinner(true)
   const searchField = document.getElementById('search-field')
   const searchText = searchField.value;
    console.log(searchText);
-  LoadPhone(searchText);
+  LoadPhone(searchText, isShowAll);
 
 }
 //handlersearchbtn2
@@ -66,5 +68,9 @@ const toggoleLodingSpinner= (isLoding) =>{
  else(
 loadingSpinner.classList.add('hidden')
  )
+}
+//Handle show all
+const showAllcontain = ()=>{
+  handleSearch(true);
 }
 //LoadPhone();
